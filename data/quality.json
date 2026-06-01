@@ -10,5 +10,9 @@
   { "institutionId": "inst-12", "grade": "B", "year": 2024, "score": 78 },
   { "institutionId": "inst-01", "grade": "A", "year": 2025, "score": 89 },
   { "institutionId": "inst-06", "grade": "C", "year": 2023, "score": 71 },
-  { "institutionId": "inst-10", "grade": "B", "year": 2024, "score": 83 }
+  { "institutionId": "inst-10", "grade": "B", "year": 2024, "score": 83 },
+  { "institutionId": "inst-13", "grade": "A", "year": 2025, "score": 90 },
+  { "institutionId": "inst-14", "grade": "A", "year": 2024, "score": 88 },
+  { "institutionId": "inst-15", "grade": "B", "year": 2025, "score": 84 },
+  { "institutionId": "inst-16", "grade": "B", "year": 2024, "score": 82 }
 ]

@@ -10,5 +10,9 @@
   { "institutionId": "inst-12", "level": "보통", "features": ["주출입구 경사로"] },
   { "institutionId": "inst-01", "level": "우수", "features": ["주출입구 경사로", "장애인용 승강기", "장애인 화장실", "점자블록"] },
   { "institutionId": "inst-06", "level": "보통", "features": ["주출입구 경사로"] },
-  { "institutionId": "inst-10", "level": "양호", "features": ["주출입구 경사로", "장애인 화장실"] }
+  { "institutionId": "inst-10", "level": "양호", "features": ["주출입구 경사로", "장애인 화장실"] },
+  { "institutionId": "inst-13", "level": "우수", "features": ["주출입구 경사로", "장애인용 승강기", "장애인 화장실", "안전손잡이"] },
+  { "institutionId": "inst-14", "level": "우수", "features": ["주출입구 경사로", "장애인용 승강기", "장애인 화장실", "안전손잡이", "휠체어 리프트"] },
+  { "institutionId": "inst-15", "level": "양호", "features": ["주출입구 경사로", "장애인 화장실"] },
+  { "institutionId": "inst-16", "level": "우수", "features": ["주출입구 경사로", "장애인용 승강기", "장애인 화장실", "안전손잡이"] }
 ]

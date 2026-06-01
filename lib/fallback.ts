@@ -145,13 +145,26 @@ export function buildPhases(sig: MatchSignals): RawPhase[] {
       kind: "기관",
       id,
       matchReason: instReason(i.distanceKm, i.quality?.grade, i.nightAvailable, i.note, sig.needNight),
-      confirmQuestion: q || (sig.needNight && i.nightAvailable ? "오늘 밤 수용 가능 정원·도전행동 대응 가능 여부 확인" : "이용 가능 여부·대기·준비물 확인"),
+      confirmQuestion: q || (sig.needNight && i.nightAvailable ? "오늘 밤 수용 가능 정원·대상자 특성 대응 가능 여부 확인" : "이용 가능 여부·대기·준비물 확인"),
     };
   };
   const clean = (arr: (RawCandidate | null)[]) => arr.filter((x): x is RawCandidate => x !== null);
 
-  // 야간 긴급일 때 우선순위가 바뀌도록 신호 기반 선택
-  const nightFirstInsts = rankInstitutions(sig, { limit: 12 }).map((c) => c.institution.id);
+  // 대상 유형 분기: 고령/치매 · 지체 · 발달(기본)
+  const isElderly = sig.targetTags.includes("고령") || sig.targetTags.includes("치매");
+  const isPhysical = !isElderly && !sig.targetTags.includes("발달장애") && sig.targetTags.includes("지체");
+  const cat: "eld" | "phy" | "dev" = isElderly ? "eld" : isPhysical ? "phy" : "dev";
+  const progSet: Record<"eld" | "phy" | "dev", { p1: string[]; p2: string[]; post: string[] }> = {
+    dev: { p1: ["cen-03", "loc-01", "cen-01", "loc-04"], p2: ["cen-02", "cen-06", "cen-05", "loc-05"], post: ["loc-03", "cen-07"] },
+    eld: { p1: ["cen-09", "loc-01", "cen-10", "cen-11"], p2: ["cen-09", "cen-11", "loc-05", "loc-07"], post: ["loc-07", "cen-10"] },
+    phy: { p1: ["cen-01", "loc-04", "loc-01", "cen-04"], p2: ["cen-06", "cen-01", "loc-05"], post: ["loc-03", "cen-04"] },
+  };
+  const picks = progSet[cat];
+  const residential = cat === "eld" ? "inst-14" : "inst-11";
+  const hub = cat === "eld" ? "inst-15" : cat === "phy" ? "inst-02" : "inst-03";
+
+  // 야간 긴급일 때 우선순위가 바뀌도록 신호 기반 선택(점수 상위)
+  const nightFirstInsts = rankInstitutions(sig, { limit: 14 }).map((c) => c.institution.id);
   const topNight = nightFirstInsts.filter((id) => instById.get(id)?.nightAvailable).slice(0, 3);
   const topDay = nightFirstInsts.filter((id) => !instById.get(id)?.nightAvailable).slice(0, 3);
 
@@ -185,19 +198,16 @@ export function buildPhases(sig: MatchSignals): RawPhase[] {
     workerActions: [
       "기존 활동지원기관 → 인근 야간 가능 기관 순으로 전화",
       "야간 단기보호 정원 확인 후 임시 연계",
-      "발달장애인지원센터·사회서비스원과 긴급돌봄 적용 협의",
+      "지역 연계 허브(지원센터·사회서비스원)와 긴급 제도 적용 협의",
     ],
     candidates: clean([
-      prog("cen-03", "보호자 응급입원 사유로 적용 가능성이 가장 높은 1순위 긴급 제도", "발달장애인지원센터에 긴급돌봄 즉시 적용 가능 여부 확인"),
-      prog("loc-01", undefined, "분당구 기준 즉시 적용 가능한 지역 긴급돌봄 확인"),
-      prog("cen-01", "기존 활동지원 이용자 — 월 한도 내 긴급 추가시간 가능성", "활동지원기관에 야간 긴급 추가 투입 가능 여부 확인"),
-      prog("loc-04", undefined, "성남시 활동지원 추가 시간 지원 적용 여부 확인"),
+      ...picks.p1.map((id) => prog(id)),
       ...topNight.map((id) => inst(id)),
     ]),
     confirmQuestions: [
       "기존 활동지원기관에 오늘 밤 긴급 추가 투입이 가능합니까?",
-      "야간 단기보호 정원이 있고 도전행동 대응이 가능합니까?",
-      "긴급돌봄 시범사업 즉시 적용 절차와 소요 시간은?",
+      "야간 단기보호 정원이 있고 대상자 특성 대응이 가능합니까?",
+      "긴급 제도 즉시 적용 절차와 소요 시간은?",
     ],
   };
 
@@ -212,15 +222,12 @@ export function buildPhases(sig: MatchSignals): RawPhase[] {
       "보호자 퇴원 시점 기준 돌봄계획 수립",
     ],
     candidates: clean([
-      prog("cen-02", "최중증 발달장애인 — 통합돌봄(24시간 개별지원) 연계 가능성 검토"),
-      prog("cen-06", "야간·익일 지속 보호가 필요하면 단기거주/단기보호 전환"),
-      prog("cen-05", "익일 주간 시간대 대체 돌봄으로 주간활동서비스 연계"),
-      prog("loc-05", undefined, "단기보호 이용료 지원으로 가족 비용 부담 완화"),
+      ...picks.p2.map((id) => prog(id)),
       ...topDay.map((id) => inst(id)),
-      inst("inst-11"),
+      inst(residential),
     ]),
     confirmQuestions: [
-      "통합돌봄 대상 선정 여부와 24시간 개별지원 연계가 가능합니까?",
+      "지속 지원 제도(통합돌봄·장기요양 등) 대상 여부와 연계가 가능합니까?",
       "단기거주/단기보호로 며칠간 연장이 가능합니까?",
       "보호자 퇴원 예정일과 그 이후 돌봄 공백은?",
     ],
@@ -237,10 +244,9 @@ export function buildPhases(sig: MatchSignals): RawPhase[] {
       "지자체 공급 부족 시간대·권역 검토",
     ],
     candidates: clean([
-      prog("loc-03", "보호자 소진 예방을 위한 가족지원·부모상담 연계"),
-      prog("cen-07", "만 18세 미만 대상자 가정의 양육·휴식 지원 보조 연계"),
+      ...picks.post.map((id) => prog(id)),
       inst("inst-09", "사회서비스원 사례관리 전환·후속 모니터링"),
-      inst("inst-03", "발달장애인지원센터 지속 사례관리 연계"),
+      inst(hub, "지속 사례관리·후속 연계 가능 여부 확인"),
     ]),
     confirmQuestions: [
       "이번 공백의 반복 가능성과 사전 대비책은?",

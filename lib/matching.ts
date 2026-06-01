@@ -68,6 +68,8 @@ export function deriveSignals(s: StructuredIntake): MatchSignals {
   if (needNight) targetTags.push("야간");
   if (needActivity) targetTags.push("활동지원");
   if (has("치매", "고령", "어르신", "노인")) targetTags.push("고령");
+  if (has("치매", "인지저하")) targetTags.push("치매");
+  if (has("지체", "휠체어", "신체장애", "뇌병변")) targetTags.push("지체");
 
   return { needNight, needShortTerm, needActivity, isMinor, targetTags: Array.from(new Set(targetTags)) };
 }
@@ -110,7 +112,7 @@ export function scoreInstitution(
   const svc = inst.serviceTypes.join(" ");
   if (sig.needShortTerm && /(단기보호|단기거주|야간돌봄|긴급보호)/.test(svc)) fit += 16;
   if (sig.needActivity && /(활동지원|긴급활동지원)/.test(svc)) fit += 12;
-  if (/(발달장애인지원센터|사회서비스원|긴급돌봄)/.test(inst.type + svc)) fit += 10;
+  if (/(발달장애인지원센터|사회서비스원|긴급돌봄|치매안심|노인맞춤|주야간보호|장애인복지관|종합재가|자립생활)/.test(inst.type + svc)) fit += 10;
   fit = Math.min(fit, 40);
 
   // night (0-20)
@@ -125,8 +127,18 @@ export function scoreInstitution(
   const quality = gradeScore(inst.quality?.grade);
   const access = accessScore(inst.accessibility?.level);
 
-  const breakdown: ScoreBreakdown = { fit, night, distance, quality, access };
-  const score = Math.max(0, Math.min(100, Math.round(fit + night + distance + quality + access)));
+  // 대상유형 불일치 페널티 (노인↔장애 교차는 강하게, 발달↔지체는 약하게)
+  const wantEld = sig.targetTags.includes("고령") || sig.targetTags.includes("치매");
+  const wantPhy = !wantEld && sig.targetTags.includes("지체") && !sig.targetTags.includes("발달장애");
+  const wantTags = wantEld ? ["고령", "치매"] : wantPhy ? ["지체"] : ["발달장애", "최중증"];
+  const isHub = /(사회서비스원|종합)/.test(inst.type) || inst.targetTags.includes("일반");
+  const instEld = inst.targetTags.includes("고령") || inst.targetTags.includes("치매");
+  const serves = isHub || inst.targetTags.some((tg) => wantTags.includes(tg));
+  const mismatch = serves ? 0 : instEld !== wantEld ? -30 : -14;
+  const adjFit = Math.max(0, fit + mismatch);
+
+  const breakdown: ScoreBreakdown = { fit: adjFit, night, distance, quality, access };
+  const score = Math.max(0, Math.min(100, Math.round(adjFit + night + distance + quality + access)));
   return { score, breakdown };
 }
 
