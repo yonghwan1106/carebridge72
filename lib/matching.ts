@@ -141,7 +141,7 @@ export function rankInstitutions(
       const { score, breakdown } = scoreInstitution(inst, sig);
       return buildInstitutionCandidate(inst, score, breakdown, "", "");
     })
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => b.score - a.score || a.institution.distanceKm - b.institution.distanceKm || a.institution.id.localeCompare(b.institution.id));
   return typeof opts?.limit === "number" ? scored.slice(0, opts.limit) : scored;
 }
 
@@ -231,7 +231,7 @@ export function hydrate(
         insts.push(cand);
       }
     }
-    insts.sort((a, b) => b.score - a.score);
+    insts.sort((a, b) => b.score - a.score || a.institution.distanceKm - b.institution.distanceKm || a.institution.id.localeCompare(b.institution.id));
 
     return {
       phase: rp.phase,

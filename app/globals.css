@@ -113,4 +113,25 @@
   .cb-stagger > *:nth-child(3) { animation-delay: 0.28s; }
   .cb-stagger > *:nth-child(4) { animation-delay: 0.4s; }
   .cb-stagger > *:nth-child(5) { animation-delay: 0.52s; }
+  /* 리포트 바 차트 진입 */
+  .cb-bar {
+    transform-origin: left;
+    animation: cb-bar-grow 0.7s ease-out both;
+  }
+}
+
+@keyframes cb-bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* 동작 줄이기 선호(전정 장애 등) 대응 */
+@media (prefers-reduced-motion: reduce) {
+  .cb-stagger > *,
+  .animate-fade-up,
+  .animate-pulse-ring,
+  .cb-bar {
+    animation: none !important;
+  }
 }

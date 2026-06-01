@@ -197,7 +197,7 @@ export default function ConsolePage() {
             )}
 
             <div className="mt-4 flex items-center gap-3">
-              <button onClick={analyze} disabled={stage === "analyzing" || text.trim().length < 5} className="cb-btn-primary !px-5 !py-3">
+              <button onClick={analyze} disabled={stage === "analyzing" || text.trim().length < 5 || !consent} className="cb-btn-primary !px-5 !py-3">
                 {stage === "analyzing" ? "분석 중…" : (<><IconSpark className="h-4 w-4" /> AI 72시간 대응안 생성</>)}
               </button>
               <button onClick={() => { setText(scenario.inputText); setRegion(scenario.region); setOccurredAt(scenario.occurredAt); }} className="cb-btn-ghost !py-3">
@@ -589,6 +589,7 @@ function InstitutionCard({
           <button
             key={s}
             onClick={() => onStatus(i.id, s)}
+            aria-pressed={status === s}
             className={`rounded-full px-2.5 py-1 text-[11.5px] font-semibold transition ${status === s ? STATUS_STYLE[s] + " ring-1 ring-current/30" : "bg-cb-surface text-cb-muted hover:bg-slate-100"}`}
           >
             {s}

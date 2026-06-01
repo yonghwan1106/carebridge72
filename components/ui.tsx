@@ -70,7 +70,7 @@ export function EngineBadge({ engine, model, className = "" }: { engine: "claude
       title={isClaude ? `실시간 Claude 분석 (${model || ""})` : "데이터셋 기반 폴백 엔진"}
     >
       <IconSpark className="h-3.5 w-3.5" />
-      {isClaude ? `AI 분석 · ${model || "Claude"}` : "폴백 엔진"}
+      {isClaude ? `AI 분석 · ${model || "Claude"}` : "규칙 엔진"}
     </span>
   );
 }

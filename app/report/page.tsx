@@ -42,11 +42,11 @@ function Bars({ data, unit = "", color = "bg-cb-primary" }: { data: { label: str
   const max = Math.max(...data.map((d) => d.v));
   return (
     <div className="space-y-2.5">
-      {data.map((d) => (
+      {data.map((d, idx) => (
         <div key={d.label} className="flex items-center gap-3">
           <span className="w-28 shrink-0 text-right text-[12.5px] font-medium text-cb-muted">{d.label}</span>
           <div className="h-5 flex-1 overflow-hidden rounded-md bg-cb-surface">
-            <div className={`h-full rounded-md ${color}`} style={{ width: `${(d.v / max) * 100}%` }} />
+            <div className={`h-full rounded-md cb-bar ${color}`} style={{ width: `${(d.v / max) * 100}%`, animationDelay: `${idx * 0.08}s` }} />
           </div>
           <span className="w-12 shrink-0 text-[12.5px] font-bold text-cb-ink">{d.v}{unit}</span>
         </div>
