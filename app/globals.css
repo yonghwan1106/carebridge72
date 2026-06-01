@@ -1,0 +1,101 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --cb-primary: #0e4d8c;
+    --cb-accent: #0e9594;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cb-surface text-cb-ink font-sans antialiased;
+    font-feature-settings: "tnum" 1;
+  }
+  ::selection {
+    background: rgba(14, 77, 140, 0.15);
+  }
+  /* 가는 스크롤바 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #c3cedd transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #c3cedd;
+    border-radius: 8px;
+  }
+}
+
+@layer components {
+  .cb-container {
+    @apply mx-auto w-full max-w-6xl px-5;
+  }
+
+  /* 카드 */
+  .cb-card {
+    @apply rounded-2xl border border-cb-border bg-white shadow-card;
+  }
+  .cb-card-pad {
+    @apply p-5 sm:p-6;
+  }
+
+  /* 버튼 */
+  .cb-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-150 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .cb-btn-primary {
+    @apply cb-btn bg-cb-primary text-white hover:bg-cb-primary-dark active:scale-[0.98] shadow-[0_4px_14px_rgba(14,77,140,0.30)];
+  }
+  .cb-btn-accent {
+    @apply cb-btn bg-cb-accent text-white hover:brightness-95 active:scale-[0.98];
+  }
+  .cb-btn-ghost {
+    @apply cb-btn border border-cb-border bg-white text-cb-ink hover:bg-cb-surface;
+  }
+
+  /* 라벨 / 인풋 */
+  .cb-label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-cb-muted;
+  }
+  .cb-input {
+    @apply w-full rounded-xl border border-cb-border bg-white px-3.5 py-2.5 text-sm text-cb-ink placeholder:text-slate-400 focus:border-cb-primary focus:outline-none focus:ring-2 focus:ring-cb-primary/20;
+  }
+  textarea.cb-input {
+    @apply resize-y leading-relaxed;
+  }
+
+  /* 칩 / 배지 */
+  .cb-chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-cb-border bg-cb-surface px-2.5 py-1 text-xs font-medium text-cb-muted;
+  }
+  .cb-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold;
+  }
+
+  /* 섹션 제목 */
+  .cb-eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.14em] text-cb-accent;
+  }
+
+  /* 데이터 출처 태그 */
+  .cb-source-tag {
+    @apply inline-flex items-center gap-1 rounded-md border border-cb-primary/20 bg-cb-primary-light px-2 py-0.5 text-[11px] font-semibold text-cb-primary-dark;
+  }
+}
+
+@layer utilities {
+  .cb-grid-faint {
+    background-image:
+      linear-gradient(rgba(14, 77, 140, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14, 77, 140, 0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+}

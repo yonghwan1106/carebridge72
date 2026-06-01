@@ -1,0 +1,13 @@
+{
+  "region": "경기 성남시",
+  "sido": "경기도",
+  "year": 2025,
+  "recipients": 1240,
+  "providerCount": 18,
+  "workers": 2080,
+  "sidoRecipients": 38470,
+  "sidoProviderCount": 412,
+  "developmentalShare": 0.34,
+  "nightCapableProviderShare": 0.28,
+  "note": "보건복지부 장애인활동지원 통계 기반 데모 수치(시군구 공급 수준 파악·기존 이용기관 우선 확인 용도)"
+}

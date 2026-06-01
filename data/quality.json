@@ -1,0 +1,14 @@
+[
+  { "institutionId": "inst-03", "grade": "A", "year": 2025, "score": 92 },
+  { "institutionId": "inst-04", "grade": "A", "year": 2024, "score": 90 },
+  { "institutionId": "inst-05", "grade": "A", "year": 2025, "score": 88 },
+  { "institutionId": "inst-07", "grade": "A", "year": 2025, "score": 91 },
+  { "institutionId": "inst-08", "grade": "B", "year": 2024, "score": 82 },
+  { "institutionId": "inst-11", "grade": "B", "year": 2025, "score": 80 },
+  { "institutionId": "inst-09", "grade": "A", "year": 2025, "score": 94 },
+  { "institutionId": "inst-02", "grade": "B", "year": 2024, "score": 84 },
+  { "institutionId": "inst-12", "grade": "B", "year": 2024, "score": 78 },
+  { "institutionId": "inst-01", "grade": "A", "year": 2025, "score": 89 },
+  { "institutionId": "inst-06", "grade": "C", "year": 2023, "score": 71 },
+  { "institutionId": "inst-10", "grade": "B", "year": 2024, "score": 83 }
+]

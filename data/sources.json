@@ -1,0 +1,58 @@
+[
+  {
+    "key": "central",
+    "name": "중앙부처복지서비스",
+    "provider": "한국사회보장정보원",
+    "format": "REST/XML",
+    "use": "장애인활동지원·발달장애인 지원·긴급지원 등 적용 가능한 중앙 제도 후보 탐색",
+    "records": 12
+  },
+  {
+    "key": "local",
+    "name": "지자체복지서비스",
+    "provider": "한국사회보장정보원",
+    "format": "XML",
+    "use": "거주지(성남시) 기준 지역 긴급돌봄·단기지원·복지관 연계 사업 탐색",
+    "records": 8
+  },
+  {
+    "key": "providers",
+    "name": "사회서비스 제공기관 정보",
+    "provider": "한국사회보장정보원",
+    "format": "OpenAPI/CSV",
+    "use": "실제 연결 가능한 제공기관(활동지원·발달장애인지원센터 등) 후보 압축",
+    "records": 7
+  },
+  {
+    "key": "quality",
+    "name": "사회서비스 제공기관 품질평가 정보",
+    "provider": "한국사회보장정보원",
+    "format": "OpenAPI",
+    "use": "기관 우선순위 산정의 보조 신뢰도 지표",
+    "records": 12
+  },
+  {
+    "key": "facilities",
+    "name": "사회복지시설 정보서비스",
+    "provider": "한국사회보장정보원",
+    "format": "OpenAPI",
+    "use": "단기보호·주간보호·단기거주 등 지역 시설 후보 탐색",
+    "records": 5
+  },
+  {
+    "key": "activity",
+    "name": "장애인활동지원 통계 정보",
+    "provider": "보건복지부",
+    "format": "파일데이터",
+    "use": "시군구 활동지원 수급자·기관·인력 공급 수준 파악, 기존 이용기관 우선 확인",
+    "records": 1
+  },
+  {
+    "key": "accessibility",
+    "name": "장애인편의시설 현황",
+    "provider": "한국사회보장정보원",
+    "format": "REST/XML",
+    "use": "시설 방문·이동이 필요한 경우 접근성 보조 판단(핵심 매칭 아닌 보조)",
+    "records": 12
+  }
+]
