@@ -259,7 +259,8 @@ export function hydrate(
     (st.gapReason && !["보호자 돌봄 공백", "보호자 돌봄 지속 곤란"].includes(st.gapReason) ? 1 : 0) +
     (st.currentServices?.[0] && !st.currentServices[0].includes("확인 필요") && !st.currentServices[0].includes("미상") ? 1 : 0) +
     (st.disabilityFeatures?.[0] && st.disabilityFeatures[0] !== "상시 돌봄 필요" ? 1 : 0);
-  const lowConfidence = meaningful <= 1;
+  // 정보 부족: 의미 있는 필드가 1개 이하이거나, AI가 정보 부족으로 긴급도를 낮게(일반·40↓) 판정한 경우
+  const lowConfidence = meaningful <= 1 || (raw.urgency.level === "일반" && raw.urgency.score <= 40);
 
   return {
     caseId: "CB-" + Date.now().toString(36).toUpperCase(),
