@@ -82,7 +82,7 @@ export default function Home() {
 
             {/* 히어로 비주얼 */}
             <Figure
-              src="/images/hero-bridge-night.png"
+              src="/images/hero-bridge-night.webp"
               alt="밤의 돌봄 공백을 잇는 케어브릿지 — 야간 동네 위 빛의 다리"
               ratio="4 / 3"
               priority
@@ -112,7 +112,7 @@ export default function Home() {
       <section className="cb-container py-14">
         <div className="grid items-center gap-8 lg:grid-cols-[0.82fr_1.18fr]">
           <Figure
-            src="/images/problem-gap.png"
+            src="/images/problem-gap.webp"
             alt="보호자 공백의 밤 — 연결되지 못한 한 가정"
             ratio="4 / 3"
           />
@@ -139,7 +139,7 @@ export default function Home() {
           <p className="mt-1.5 text-sm text-cb-muted">담당자 한 명이 접수부터 사후 리포트까지 하나의 콘솔에서 처리합니다.</p>
 
           <Figure
-            src="/images/protocol-72h.png"
+            src="/images/protocol-72h.webp"
             alt="72시간 대응 흐름 — 0–2h·2–24h·24–72h·사후"
             ratio="21 / 9"
             className="mt-6"
@@ -177,7 +177,7 @@ export default function Home() {
             </p>
           </div>
           <Figure
-            src="/images/data-network.png"
+            src="/images/data-network.webp"
             alt="7종 공공데이터가 결합되는 구조"
             ratio="4 / 3"
           />
@@ -221,7 +221,7 @@ export default function Home() {
         <div className="mt-8 cb-card cb-card-pad">
           <div className="grid items-center gap-6 lg:grid-cols-[0.78fr_1.22fr]">
             <Figure
-              src="/images/impact-morning.png"
+              src="/images/impact-morning.webp"
               alt="72시간 후, 회복된 아침"
               ratio="4 / 3"
             />

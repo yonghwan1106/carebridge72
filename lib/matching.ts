@@ -247,6 +247,20 @@ export function hydrate(
 
   const usedDataSources = CANONICAL_SOURCE_ORDER.filter((n) => usedSources.has(n));
 
+  // 정직 게이트: 입력 지역이 데모 데이터셋(성남시)과 다른가 / 정보가 부족한가
+  const DATASET_SIGUNGU = "성남시";
+  const inputSi = (req.region || raw.structured.location || "").match(/[가-힣]+시/)?.[0] || null;
+  const regionMismatch = !!inputSi && inputSi !== DATASET_SIGUNGU;
+
+  const st = raw.structured;
+  const meaningful =
+    (st.location && !st.location.includes("미상") && st.location !== "성남시 분당구" ? 1 : 0) +
+    (st.targetType && !st.targetType.includes("미상") && !["상시돌봄 대상자", "상시돌봄 장애인"].includes(st.targetType) ? 1 : 0) +
+    (st.gapReason && !["보호자 돌봄 공백", "보호자 돌봄 지속 곤란"].includes(st.gapReason) ? 1 : 0) +
+    (st.currentServices?.[0] && !st.currentServices[0].includes("확인 필요") && !st.currentServices[0].includes("미상") ? 1 : 0) +
+    (st.disabilityFeatures?.[0] && st.disabilityFeatures[0] !== "상시 돌봄 필요" ? 1 : 0);
+  const lowConfidence = meaningful <= 1;
+
   return {
     caseId: "CB-" + Date.now().toString(36).toUpperCase(),
     region: req.region || raw.structured.location || "성남시 분당구",
@@ -257,6 +271,8 @@ export function hydrate(
     checklist: raw.checklist || [],
     usedDataSources,
     ethics: DEFAULT_ETHICS,
+    regionMismatch,
+    lowConfidence,
     engine,
     model,
     elapsedMs,

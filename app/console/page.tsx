@@ -39,10 +39,13 @@ const STATUS_STYLE: Record<RecStatus, string> = {
 
 const ANALYZING_STEPS = [
   "상담 내용을 표준 항목으로 구조화 중…",
-  "긴급도·안전요인 분류 중…",
-  "공공데이터(제도·제공기관) 검색 중…",
-  "품질·거리·접근성 기반 후보 압축 중…",
-  "72시간 대응안 생성 중…",
+  "대상자 특성·장애 유형 분류 중…",
+  "긴급도·안전요인 판정 중…",
+  "공공데이터(제도·제공기관 DB) 조회 중…",
+  "품질·거리·야간 가용성 점수 산정 중…",
+  "기관 우선순위 압축 중…",
+  "72시간 단계별 대응안 생성 중…",
+  "확인 질문·처리 체크리스트 정리 중…",
 ];
 
 const PHASE_TONE: Record<string, { dot: string; chip: string }> = {
@@ -62,15 +65,21 @@ export default function ConsolePage() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [records, setRecords] = useState<Record<string, { status: RecStatus; note: string }>>({});
   const [stepIdx, setStepIdx] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
 
   const resultRef = useRef<HTMLDivElement>(null);
 
-  // 분석 중 단계 애니메이션
+  // 분석 중 단계 애니메이션 + 경과 시간
   useEffect(() => {
     if (stage !== "analyzing") return;
     setStepIdx(0);
-    const t = setInterval(() => setStepIdx((i) => (i + 1) % ANALYZING_STEPS.length), 900);
-    return () => clearInterval(t);
+    setElapsed(0);
+    const t1 = setInterval(() => setStepIdx((i) => (i + 1) % ANALYZING_STEPS.length), 1400);
+    const t2 = setInterval(() => setElapsed((e) => e + 1), 1000);
+    return () => {
+      clearInterval(t1);
+      clearInterval(t2);
+    };
   }, [stage]);
 
   // 처리기록 localStorage 영속(데모 현실감)
@@ -207,6 +216,10 @@ export default function ConsolePage() {
                 <li>· 품질평가·장애인편의시설 (우선순위·접근성)</li>
                 <li>· 장애인활동지원 통계 (공급 수준)</li>
               </ul>
+              <div className="mt-3 flex items-start gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-2 text-[11.5px] leading-snug text-cb-amber">
+                <IconAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                <span>기관 후보는 <b>성남시 데모 데이터셋</b> 기준입니다. 실증 시 해당 지자체 OpenAPI 실데이터로 대체됩니다.</span>
+              </div>
             </div>
             <EthicsBanner />
           </div>
@@ -223,14 +236,18 @@ export default function ConsolePage() {
                 <IconSpark className="h-5 w-5" />
               </span>
             </span>
-            <div>
-              <div className="text-sm font-bold text-cb-ink">AI가 72시간 대응안을 생성하고 있습니다</div>
-              <div className="mt-0.5 text-[13px] text-cb-muted transition">{ANALYZING_STEPS[stepIdx]}</div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <div className="text-sm font-bold text-cb-ink">AI가 72시간 대응안을 생성하고 있습니다</div>
+                <span className="text-[11px] font-semibold tabular-nums text-cb-muted">{elapsed}초</span>
+              </div>
+              <div key={stepIdx} className="mt-0.5 text-[13px] text-cb-muted animate-fade-up">{ANALYZING_STEPS[stepIdx]}</div>
             </div>
           </div>
           <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-cb-surface">
-            <div className="h-full w-1/3 animate-[fade-up_1s_ease-in-out_infinite] rounded-full bg-cb-accent" style={{ width: `${((stepIdx + 1) / ANALYZING_STEPS.length) * 100}%`, transition: "width .6s" }} />
+            <div className="h-full rounded-full bg-cb-accent" style={{ width: `${((stepIdx + 1) / ANALYZING_STEPS.length) * 100}%`, transition: "width .6s" }} />
           </div>
+          <div className="mt-2 text-[11px] leading-relaxed text-cb-muted">실시간 AI 분석은 보통 10~15초 소요됩니다(최대 25초). 지연 시 데이터셋 기반 규칙 엔진으로 자동 전환됩니다.</div>
         </div>
       )}
 
@@ -279,6 +296,18 @@ function ResultView({
           <span className="ml-auto"><EngineBadge engine={result.engine} model={result.model} /></span>
         </div>
         <p className="mt-3 text-[14px] leading-relaxed text-cb-ink">{result.urgency.rationale}</p>
+        {result.regionMismatch && (
+          <div className="mt-3 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-[12.5px] leading-relaxed text-cb-amber">
+            <IconAlert className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>현재 데모 데이터셋은 <b>성남시</b> 기관만 탑재되어 있습니다. 입력하신 <b>{result.region}</b>의 실제 기관·제도는 실증 단계에서 해당 지자체 OpenAPI 실데이터로 자동 표출됩니다. 아래는 매칭 엔진의 동작을 보여주는 <b>성남시 예시</b>입니다.</span>
+          </div>
+        )}
+        {result.lowConfidence && (
+          <div className="mt-3 flex items-start gap-2 rounded-lg border border-cb-primary/20 bg-cb-primary-light/60 px-3 py-2.5 text-[12.5px] leading-relaxed text-cb-primary-dark">
+            <IconAlert className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>입력 정보가 부족합니다. 정확한 대응을 위해 먼저 아래 <b>‘담당자 추가 확인 질문’</b>을 보완해 주세요. 현재 결과는 제한된 정보 기준의 잠정 분석입니다.</span>
+          </div>
+        )}
         {result.urgency.safetyFlags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {result.urgency.safetyFlags.map((f) => (
@@ -292,6 +321,7 @@ function ResultView({
             <IconDB className="h-3.5 w-3.5" /> 이번 분석에 활용된 공공데이터
           </div>
           <div className="flex flex-wrap gap-1.5">
+            <span className="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-cb-amber">성남시 데모셋 기준</span>
             {result.usedDataSources.map((s) => (
               <span key={s} className="cb-source-tag">{s}</span>
             ))}

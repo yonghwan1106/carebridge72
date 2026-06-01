@@ -186,6 +186,8 @@ export interface AnalysisResult {
   checklist: string[];
   usedDataSources: string[];
   ethics: string[];
+  regionMismatch: boolean;
+  lowConfidence: boolean;
   engine: "claude" | "fallback";
   model: string | null;
   elapsedMs: number;

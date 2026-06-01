@@ -39,6 +39,7 @@ export function buildStructurePrompt(req: IntakeRequest): { system: string; user
     "- 당일: 오늘 안에 임시 돌봄 연결이 필요",
     "- 72시간: 72시간 내 제도·기관 연계 필요",
     "- 일반: 정보 안내·일반 상담 수준",
+    "- (중요) 입력에 대상자·위치·공백 사유 등 정보가 거의 없으면 score를 40 이하, level을 '일반'으로 하고 missingQuestions를 우선 채우십시오. 정보가 없는데 높은 긴급도를 부여하지 마십시오.",
     "",
     "출력 규칙:",
     "- 아래 JSON 스키마와 동일한 구조의 '유효한 JSON 하나만' 출력. 코드펜스(```)나 설명 문장 금지.",
