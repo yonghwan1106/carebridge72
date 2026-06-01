@@ -125,9 +125,9 @@ export function TopNav() {
           <Logo />
         </Link>
         <nav className="flex items-center gap-1 text-sm font-semibold text-cb-muted">
-          <Link href="/" className="rounded-lg px-3 py-1.5 hover:bg-cb-surface hover:text-cb-ink">소개</Link>
-          <Link href="/console" className="rounded-lg px-3 py-1.5 hover:bg-cb-surface hover:text-cb-ink">담당자 콘솔</Link>
-          <Link href="/report" className="rounded-lg px-3 py-1.5 hover:bg-cb-surface hover:text-cb-ink">사후 리포트</Link>
+          <Link href="/" className="hidden sm:block rounded-lg px-3 py-1.5 hover:bg-cb-surface hover:text-cb-ink">소개</Link>
+          <Link href="/console" className="hidden sm:block rounded-lg px-3 py-1.5 hover:bg-cb-surface hover:text-cb-ink">담당자 콘솔</Link>
+          <Link href="/report" className="hidden sm:block rounded-lg px-3 py-1.5 hover:bg-cb-surface hover:text-cb-ink">사후 리포트</Link>
           <Link href="/console" className="cb-btn-primary ml-1 !px-3 !py-1.5">
             긴급 상담 시작 <IconArrow className="h-4 w-4" />
           </Link>

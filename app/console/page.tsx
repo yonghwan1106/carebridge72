@@ -55,6 +55,13 @@ const PHASE_TONE: Record<string, { dot: string; chip: string }> = {
   "사후": { dot: "bg-cb-ok", chip: "bg-green-50 text-cb-ok" },
 };
 
+const PHASE_ACCENT: Record<string, string> = {
+  "0-2h": "border-l-4 border-l-cb-danger",
+  "2-24h": "border-l-4 border-l-cb-warn",
+  "24-72h": "border-l-4 border-l-cb-amber",
+  "사후": "border-l-4 border-l-cb-ok",
+};
+
 export default function ConsolePage() {
   const [stage, setStage] = useState<Stage>("intake");
   const [text, setText] = useState(scenario.inputText);
@@ -180,8 +187,12 @@ export default function ConsolePage() {
             </label>
 
             {err && (
-              <div className="mt-3 flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-cb-danger">
-                <IconAlert className="h-4 w-4" /> {err}
+              <div className="mt-3 rounded-lg bg-red-50 px-3 py-3 text-sm text-cb-danger">
+                <div className="flex items-center gap-2 font-semibold">
+                  <IconAlert className="h-4 w-4" /> {err}
+                </div>
+                <p className="mt-1 text-[12px] text-cb-muted">API 연결 오류 시 데이터셋 기반 폴백으로 자동 전환됩니다. 잠시 후 다시 시도해 주세요.</p>
+                <button onClick={analyze} className="mt-2 cb-btn-ghost !py-1.5 !text-xs">다시 시도</button>
               </div>
             )}
 
@@ -285,7 +296,7 @@ function ResultView({
   }
 
   return (
-    <div ref={resultRef} className="mt-6 space-y-6 scroll-mt-20">
+    <div ref={resultRef} className="mt-6 space-y-6 scroll-mt-20 cb-stagger">
       {/* 케이스 헤더 */}
       <div className="cb-card cb-card-pad">
         <div className="flex flex-wrap items-center gap-3">
@@ -453,7 +464,7 @@ function PhaseBlock({
 }) {
   const tone = PHASE_TONE[phase.phase] || PHASE_TONE["사후"];
   return (
-    <div className="relative rounded-xl border border-cb-border bg-white p-4">
+    <div className={`relative rounded-xl border border-cb-border bg-white p-4 ${PHASE_ACCENT[phase.phase] || "border-l-4 border-l-cb-ok"}`}>
       <div className="flex flex-wrap items-center gap-2">
         <span className={`h-2.5 w-2.5 rounded-full ${tone.dot}`} />
         <span className={`cb-badge ${tone.chip}`}>{phase.window}</span>
